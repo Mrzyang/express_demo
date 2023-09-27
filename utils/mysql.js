@@ -1,33 +1,58 @@
-const config = require(`../config/${require('../config/config').envType}.config`);
-const mysql = require('mysql2');
+const config = require(`../config/${require('../config/config').envType}.config`).mysqlConnectionConfig;
 const mysqlPromise = require('mysql2/promise');
+const mysql = require('mysql2');
 
-// 创建数据库连接池
-const pool = mysql.createPool(config.mysqlConnectionConfig);
+class MysqlPromiseUtils {
+  constructor() {
+    this.pool = mysqlPromise.createPool(config);
+  }
 
-// 从连接池获取连接   query回调类型
-const getConnection = () => {
-  return new Promise((resolve, reject) => {
-    pool.getConnection((err, connection) => {
-      if (err) {
-        return reject(err);
-      }
-      resolve(connection);
-    });
-  });
-};
+  async query(sql, values) {
+    const connection = await this.pool.getConnection();
+    try {
+      const [rows] = await connection.query(sql, values);
+      return rows;
+    } finally {
+      connection.release();
+    }
+  }
 
-
-
-const PromisePool = async() => mysqlPromise.createPool(config.mysqlConnectionConfig);
-
-
-// 从连接池获取连接   query  Promise类型
-const getPromiseConnection = await PromisePool.getConnection();
-
-const getMysqlConnection = {
-  getConnection: getConnection,
-  getPromiseConnection: getPromiseConnection
+  async close() {
+    await this.pool.end();
+  }
 }
 
-module.exports = getMysqlConnection; // 导出 getConnection 函数
+class MysqlUtils {
+  constructor() {
+    this.pool = mysql.createPool(config);
+  }
+
+  query(sql, values) {
+    return new Promise((resolve, reject) => {
+      this.pool.getConnection((err, connection) => {
+        if (err) {
+          return reject(err);
+        }
+
+        connection.query(sql, values, (queryErr, results) => {
+          connection.release();
+
+          if (queryErr) {
+            return reject(queryErr);
+          }
+          resolve(results);
+        });
+      });
+    });
+  }
+
+  close() {
+    this.pool.end();
+  }
+}
+
+const dbUtils = {
+  mysqlPromiseUtils: MysqlPromiseUtils,
+  mysqlUtils: MysqlUtils
+}
+module.exports = dbUtils;

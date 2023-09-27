@@ -1,19 +1,29 @@
-const mysqlGetConnection = require("../utils/mysql"); // 根据你的路径来引入 mysqlGetConnection
+const MySQLUtils = require('../utils/mysql').mysqlPromiseUtils; // 替换成你的模块路径
 
-exports.getUserInfoById = async (id) => {
+exports.list = async () => {
+  const db = new MySQLUtils();
   try {
-    // 获取数据库连接
-    const connection = await mysqlGetConnection();
-
-    // 执行查询操作
-    const [rows] = await connection.query("SELECT * FROM user WHERE id = ?", [
-      id,
-    ]);
-    // 释放连接
-    connection.release();
-    // 返回查询结果
-    return rows;
+    const results = await db.query('SELECT * FROM user');
+    return results;
   } catch (error) {
-    throw error;
+    console.error('Error:', error);
+  } finally {
+    // 关闭数据库连接
+    await db.close();
   }
-};
+}
+
+
+exports.getUserById = async (id) => {
+  const db = new MySQLUtils();
+  try {
+    const results = await db.query('SELECT * FROM user where id = ?', [id]);
+    return results;
+  } catch (error) {
+    console.error('Error:', error);
+  } finally {
+    // 关闭数据库连接
+    await db.close();
+  }
+}
+

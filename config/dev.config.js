@@ -8,6 +8,13 @@ const config = {
     connectionLimit: 10, // 连接池最大连接数
     queueLimit: 0, // 连接池中最大等待连接数，0 表示不限制
   },
+  redisConnectionConfig: {
+    host: 'localhost',     // Redis 服务器的主机名
+    port: 6379,            // Redis 服务器的端口号
+    connectionName: 'myApp', // 连接名称
+    maxRetriesPerRequest: 3, // 每个请求的最大重试次数
+    enableAutoPipelining: true, // 启用自动流水线（自动批量命令）
+  },
 };
 
 module.exports = config;

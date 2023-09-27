@@ -1,6 +1,5 @@
-const mysql = require("../../utils/mysql"); // 根据你的路径来引入 mysql 函数
+const getMysqlConnection = require("../../utils/mysql"); // 根据你的路径来引入 mysql 函数
 const redis = require("../../utils/redis");
-
 const userModel = require('../../model/userModel')
 
 
@@ -15,35 +14,20 @@ exports.register = async (req, res, next) => {
 
 exports.list = async (req, res, next) => {
   try {
-    // 处理请求
-    res.send("get /api/user/list");
+    let userList =await userModel.list();
+    res.json(userList);
   } catch (error) {
-    next(error);
-  }
-};
-
-exports.info = async (req, res, next) => {
-  try {
-    const connection = await mysql.getConnection();
-    connection.query("SELECT * FROM user", (err, results) => {
-      connection.release(); // 释放连接回连接池
-      if (err) {
-        console.error("Error executing query:", err);
-        return res.status(500).json({ error: "Error fetching users" });
-      }
-      res.json(results);
-    });
-  } catch (error) {
-    console.error("Error getting connection:", error);
-    res.status(500).json({ error: "Error getting connection" });
+    res.json({
+      err: error
+    })
   }
 };
 
 
-exports.getUserInfo = async (req, res, next) => {
+exports.getUserById = async (req, res, next) => {
   let id = req.query.id;
   try {
-    let userInfo =await userModel.getUserInfoById(id)
+    let userInfo =await userModel.getUserById(id);
     res.json(userInfo);
   } catch (error) {
     res.json({

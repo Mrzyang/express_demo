@@ -3,7 +3,7 @@ var dbUtils = require("../utils/db");
 const fs = require("fs");
 var router = express.Router();
 
-const mysqlGetConnection = require('../utils/mysql'); // 根据你的路径来引入 mysqlGetConnection 函数
+// const mysqlGetConnection = require('../utils/mysql'); // 根据你的路径来引入 mysqlGetConnection 函数
 const redis = require('../utils/redis')
 
 const { query } = require('express-validator');
@@ -76,22 +76,22 @@ router.get("/testAsync", async (req, res, next) => {
   }
 });
 
-router.get("/testMysql", async (req, res, next)=>{
-  try {
-    const connection = await mysqlGetConnection();
-    connection.query('SELECT * FROM user', (err, results) => {
-      connection.release(); // 释放连接回连接池
-      if (err) {
-        console.error('Error executing query:', err);
-        return res.status(500).json({ error: 'Error fetching users' });
-      }
-      res.json(results);
-    });
-  } catch (error) {
-    console.error('Error getting connection:', error);
-    res.status(500).json({ error: 'Error getting connection' });
-  }
-})
+// router.get("/testMysql", async (req, res, next)=>{
+//   try {
+//     const connection = await mysqlGetConnection();
+//     connection.query('SELECT * FROM user', (err, results) => {
+//       connection.release(); // 释放连接回连接池
+//       if (err) {
+//         console.error('Error executing query:', err);
+//         return res.status(500).json({ error: 'Error fetching users' });
+//       }
+//       res.json(results);
+//     });
+//   } catch (error) {
+//     console.error('Error getting connection:', error);
+//     res.status(500).json({ error: 'Error getting connection' });
+//   }
+// })
 
 router.get('/testRedis', async (req, res) => {
   try {

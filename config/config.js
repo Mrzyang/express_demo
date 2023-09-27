@@ -1,3 +1,3 @@
-const envType = "dev";
+const envType = "sit";
 
 exports.envType = envType;
