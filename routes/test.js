@@ -3,6 +3,7 @@ var dbUtils = require("../utils/db");
 const fs = require("fs");
 var router = express.Router();
 
+
 // const mysqlGetConnection = require('../utils/mysql'); // 根据你的路径来引入 mysqlGetConnection 函数
 const redis = require('../utils/redis')
 
@@ -42,6 +43,7 @@ router.get("/test", function (req, res, next) {
   res.end("  123");
 });
 
+// 解析post请求 application/x-www-form-urlencoded类型的报文
 router.post("/testPost", (req, res, next) => {
   let body = req.body;
   let name = body.name;
@@ -49,6 +51,19 @@ router.post("/testPost", (req, res, next) => {
   console.log("name=" + name + "  age=" + age);
   res.send("这里是解析post类型请求的报文体");
 });
+
+// 解析post请求 raw  JSON类型的报文
+router.post('/testRawJson', (req, res) => {
+  // 从请求体中获取JSON参数
+  const { name, age } = req.body;
+  // 打印每个字段
+  console.log('Name:', name);
+  console.log('Age:', age);
+
+  // 可以选择返回一个响应
+  res.json({ message: '数据已接收' });
+});
+
 
 router.get("/testUtil", async function (req, res, next) {
   let dbContent = await dbUtils.getDb();

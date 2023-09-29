@@ -2,13 +2,14 @@ var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+
+const morganLevel = require(`./config/${require('./config/config').envType}.config`).morganLevel;
+var morgan = require('morgan');
 
 var indexRouter = require('./routes/index');
-var apiRouter = require('./routes/api')
+var apiRouter = require('./routes/apiRouter')
 var testRouter = require('./routes/test');
 var testPugViewRouter = require('./routes/testPugView');
-
 
 var app = express();
 
@@ -16,12 +17,14 @@ var app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
-app.use(logger('dev'));
-// 解析post请求raw类型的json报文  aapplication/json
+app.use(morgan(morganLevel));
+// 解析post请求raw类型的json报文  application/json
 app.use(express.json());
 // 解析post请求 application/x-www-form-urlencoded类型的报文
 app.use(express.urlencoded({ extended: false }));
+// 解析cookie
 app.use(cookieParser());
+// 指定pug静态资源文件的位置
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
