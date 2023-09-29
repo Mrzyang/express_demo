@@ -1,5 +1,4 @@
 var express = require("express");
-var dbUtils = require("../utils/db");
 const fs = require("fs");
 var router = express.Router();
 
@@ -64,12 +63,6 @@ router.post('/testRawJson', (req, res) => {
   res.json({ message: '数据已接收' });
 });
 
-
-router.get("/testUtil", async function (req, res, next) {
-  let dbContent = await dbUtils.getDb();
-  console.log("读取的json文件内容是:", dbContent);
-  res.json(dbContent);
-});
 
 router.get("/testErr", function (req, res, next) {
   try {
