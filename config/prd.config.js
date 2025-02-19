@@ -25,8 +25,8 @@ const config = {
     enableAutoPipelining: true, // 启用自动流水线（自动批量命令）
   },
   wxMiniProgramConfig: { //微信小程序配置
-    app_id: "wx217f9f8bf1cfb0c1",
-    app_secret: "05de3e53617d1c04fbef30697f2f0bc1"
+    app_id: "foo",
+    app_secret: "bar"
   }
 };
 
