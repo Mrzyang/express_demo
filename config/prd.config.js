@@ -3,11 +3,9 @@ const config = {
   winstonLevel: "info",
   jwtSecret: "3b59ee4e-5ecb-11ee-8c99-0242ac120002",
   jwtRefreshSecret: "6b0b90bb-4903-3c9f-9348-a5d4af042fcb",
-  sessionSecret: "0ef7e94c-78cc-4ca5-9a6e-e88efb7c3e72",
   jwt_token_expire_time: "1h",
   jwt_refresh_token_expire_time: "7d",
   redis_jwt_token_expire_time: 60 * 60, //单位秒，redis中的jwt token过期时间，应该与上面的jwt_token_expire_time保持一致
-  session_cookie_expire_time: 60 * 60 * 1000, // 单位毫秒，这里设置的过期时长的为1小时
   mysqlConnectionConfig: {
     host: "127.0.0.1",
     user: "root",

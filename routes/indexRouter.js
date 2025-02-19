@@ -3,35 +3,6 @@ var router = express.Router();
 const redis = require("../utils/redis");
 const { query } = require("express-validator");
 
-router.get("/", function (req, res, next) {
-  return res.render("index");
-});
-
-router.get("/page/*", function (req, res, next) {
-  // 使用路由参数来捕获 URL 的剩余部分
-  const fullPath = req.originalUrl;
-  // 发送路由全名作为响应
-  // 使用正则表达式匹配并截取中间的部分
-  const match = fullPath.match(/\/(.*?)\.html/);
-  if (match && match[1]) {
-    const middlePart = match[1];
-    return res.render(middlePart);
-  } else {
-    return res.send("404 NOT FOUND.");
-  }
-});
-
-// redis存储session测试
-router.get('/set-session', (req, res) => {
-  req.session.username = 'john_doe'; // 设置会话数据
-  res.send('Session data set.');
-});
-
-router.get('/get-session', (req, res) => {
-  const username = req.session.username; // 获取会话数据
-  res.send(`Session data: ${username}`);
-});
-
 /* GET home page. */
 router.get("/demo", function (req, res, next) {
   let title = "这里是标题";
