@@ -26,12 +26,13 @@ app.use(express.urlencoded({ extended: false }));
 app.use("/", indexRouter);
 
 // 使用 cors 中间件，只允许 /api 和 /api/ 开头的请求进行跨域请求。本地前后端联调时临时设置一下允许跨域，免得还要开一个nginx反向代理，挺麻烦的。
-app.use(
-  cors({
-    origin: [/^\/api($|\/)/, /\/abc($|\/)/], // 正则表达式匹配路径
-  })
-);
-app.use("/api", apiRouter);
+// 自定义 CORS 配置
+const corsOptions = {
+  origin: true, // 允许所有来源（可以根据需要设置为具体的域名）
+  methods: 'GET,POST,PUT,DELETE', // 允许的 HTTP 方法
+  //allowedHeaders: 'Content-Type,Authorization', // 允许的请求头,Authorization用于jwt验证
+};
+app.use("/api", cors(corsOptions), apiRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
